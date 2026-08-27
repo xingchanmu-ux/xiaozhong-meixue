@@ -155,7 +155,7 @@
         const totalTop3 = top3.reduce((s, x) => s + x.score, 0) || 1;
         const spectrumHtml = top3.map((x) => {
             const pct = Math.round(x.score / totalTop3 * 100);
-            return '<div class="spectrum-item"><span class="s-name">' + x.name + '</span><span class="s-bar-wrap"><span class="s-fill" style="background:' + STYLE_COLORS[x.name] + ';width:0%"></span></span><span class="s-pct">' + pct + '%</span></div>';
+            return '<div class="spectrum-item"><span class="s-name">' + x.name + '</span><span class="s-bar-wrap"><span class="s-fill" data-color="' + STYLE_COLORS[x.name] + '" style="width:0%"></span></span><span class="s-pct">' + pct + '%</span></div>';
         }).join('');
         const featuresHtml = detail.features.map(f => '<li>' + f + '</li>').join('');
         const html =
@@ -167,7 +167,13 @@
             '<div class="result-bottom"><button class="share-btn" id="shareBtn">生成分享卡片</button><button class="retest-btn" id="retestBtn">重新测试</button></div>';
         $('resultContent').innerHTML = html;
         setTimeout(() => {
-            $('resultContent').querySelectorAll('.s-fill').forEach((el, idx) => { const pct = Math.round(top3[idx].score / totalTop3 * 100); el.style.width = pct + '%'; });
+            $('resultContent').querySelectorAll('.s-fill').forEach((el, idx) => {
+                const pct = Math.round(top3[idx].score / totalTop3 * 100);
+                const color = el.getAttribute('data-color') || STYLE_COLORS[top3[idx].name];
+                el.style.backgroundColor = color;
+                el.style.background = color;
+                el.style.width = pct + '%';
+            });
         }, 100);
         $('shareBtn').addEventListener('click', () => generateShareCard(main.name, top3, totalTop3));
         $('retestBtn').addEventListener('click', () => { startTest(); });
