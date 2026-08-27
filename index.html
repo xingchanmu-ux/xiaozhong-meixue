@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8" />
@@ -50,7 +50,7 @@
     <canvas id="shareCanvas" style="display:none;"></canvas>
     <script>    const STYLES = ['超现实暗黑童话','旧未来主义','神性极简','赛博田园','云端造梦','海湾度假风','浮世绘暗夜','怪核','刚性柔美','洛可可废土'];
     const STYLE_EN = { '超现实暗黑童话':'Surreal Dark Fairy Tale','旧未来主义':'Retro-futurism','神性极简':'Sacred Minimalism','赛博田园':'Cyberpastoral','云端造梦':'Cloudcore','海湾度假风':'Coastal Grandmother','浮世绘暗夜':'Yami-Ukiyo-e','怪核':'Weirdcore','刚性柔美':'Tough Soft','洛可可废土':'Rococo Wasteland' };
-    const STYLE_COLORS = { '超现实暗黑童话':'#3b1c1a','旧未来主义':'#f09b22','神性极简':'#c4b9a8','赛博田园':'#5f7a5c','云端造梦':'#b5d5d0','海湾度假风':'#d4c5b0','浮世绘暗夜':'#1a2a3a','怪核':'#8a9a8a','刚性柔美':'#8c7c6c','洛可可废土':'#c4a89a' };
+    const STYLE_COLORS = { '超现实暗黑童话':'#5b1a2a','旧未来主义':'#e07b1a','神性极简':'#8a7a5a','赛博田园':'#4a6a3c','云端造梦':'#5a9a95','海湾度假风':'#3a6a95','浮世绘暗夜':'#1a2a4a','怪核':'#5a7a5a','刚性柔美':'#6c5c4c','洛可可废土':'#a4786a' };
     const STYLE_DETAIL = {
         '超现实暗黑童话': { subtitle:'你是一首用暗处写的摇篮曲', visual:'森林深处的石砌城堡，墙缝里长着深红色的苔藓。彩色玻璃把月光切碎，投在地面上变成暗红、紫蓝和琥珀色的光斑。一只穿斗篷的兔子坐在台阶上，怀里抱着一只缺了耳朵的布偶。空气里有湿木头和旧铁的气味。远处传来不知名的鸟叫，像在喊一个被遗忘的名字。', def:'以哥特建筑、民间传说和超现实主义绘画为基底，将童真的叙事外壳与黑暗的内核并置的视觉文学流派。', features:['物性反转——动物像人一样行事，但保留了动物的冷眼。人与非人的界限被刻意模糊。','童谣式恐怖——恐怖感来自"不合时宜"：漂亮的裙子上有血迹，甜美的笑容下牙齿太尖。','异色温情——在黑暗的缝隙里藏一点柔软。怪物也会孤独，女巫也会种花。'], movie:'《潘神的迷宫》', book:'《安徒生童话全集》（原版）', outfit:'暗红丝绒裙、黑色蕾丝领结、银色细链、旧皮靴', personality:'喜欢超现实暗黑童话的人，往往在很小的时候就学会了"看穿"。你不容易被表面的美好欺骗，但你也因此比大多数人更懂得欣赏"不完美"里的美——比如枯枝的线条、旧物的痕迹、一个结局不那么圆满的故事。你对世界的温柔是带刺的。你不说空洞的安慰，但你在别人难过的时候，会默默递上一杯热茶，然后坐在旁边不说话。你相信黑暗是可以被讲述的，而一旦被讲出来，它就不再那么重了。', tags:['通透','悲悯','温柔的冷'] },
         '旧未来主义': { subtitle:'你相信过去曾许诺过一个更好的未来', visual:'一间墙壁刷成亮橙色的房间，角落摆着一台圆润的旧式电视机，屏幕上闪着雪花点。桌上有一只彩色塑料托盘，上面放着几个几何形状的糖果盒。窗外是画上去的星空——星星是五角形的，月亮弯得像一个微笑。一切都干净、明亮、带着一种天真的确信。', def:'20世纪中期人们对未来的想象——用当时的眼光去构建明天，充满了乐观、色彩和流线型的设计。', features:['乐观的科幻——科技不会带来灾难，而是带来更舒适的生活。飞行汽车、月球度假村、家用机器人。','塑料与流线——材质以鲜艳的塑料、玻璃纤维和镀铬金属为主，造型圆润无棱角。','太空时代的日常化——把太空元素融入日常：火箭形状的台灯、星球图案的壁纸。'], movie:'《2001太空漫游》', book:'《华氏451》', outfit:'高饱和色块、PVC材质、几何形耳环、白色短靴', personality:'喜欢旧未来主义的人，心里大概还留着一点"相信"。你未必真的觉得世界会变好，但你愿意怀念那个曾经相信世界会变好的年代。你对旧东西有一种特别的情感——不是因为它旧，而是因为它曾经很新、很亮、很笃定。你可能会被"未完成"的东西吸引。一张草图、一个概念、一段还没有变成现实的设想——你觉得这些比完成品更有生命力。', tags:['怀旧的乐观','有好奇心','相信可能性'] },
@@ -194,47 +194,78 @@
         const canvas = $('shareCanvas'); canvas.width = W; canvas.height = H;
         const ctx = canvas.getContext('2d');
         const detail = STYLE_DETAIL[mainName]; const mainColor = STYLE_COLORS[mainName];
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function () {
+            drawCard(canvas, ctx, img, mainName, detail, mainColor, top3, totalTop3, W, H);
+        };
+        img.onerror = function () {
+            drawCard(canvas, ctx, null, mainName, detail, mainColor, top3, totalTop3, W, H);
+        };
+        img.src = 'assets/styles/' + encodeURIComponent(mainName) + '.jpg';
+    }
+    function drawCard(canvas, ctx, img, mainName, detail, mainColor, top3, totalTop3, W, H) {
         ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+        // 顶部插画区（占上方 720px）
+        const imgH = 720;
+        if (img) {
+            // cover 拉伸
+            const ir = img.width / img.height;
+            const cr = W / imgH;
+            let sw, sh, sx, sy;
+            if (ir > cr) { sh = img.height; sw = sh * cr; sx = (img.width - sw) / 2; sy = 0; }
+            else { sw = img.width; sh = sw / cr; sx = 0; sy = (img.height - sh) / 2; }
+            ctx.drawImage(img, sx, sy, sw, sh, 0, 0, W, imgH);
+        } else {
+            ctx.fillStyle = mainColor; ctx.fillRect(0, 0, W, imgH);
+        }
+        // 插画底部渐变过渡到白
+        const grad = ctx.createLinearGradient(0, imgH - 160, 0, imgH);
+        grad.addColorStop(0, 'rgba(255,255,255,0)');
+        grad.addColorStop(1, 'rgba(255,255,255,1)');
+        ctx.fillStyle = grad; ctx.fillRect(0, imgH - 160, W, 160);
+        // 顶部色条
         ctx.fillStyle = mainColor; ctx.fillRect(0, 0, W, 14);
-        const padX = 90; let y = 150;
+
+        const padX = 90; let y = imgH + 40;
         ctx.fillStyle = '#bbbbbb'; ctx.font = '300 30px "Helvetica Neue", Arial, sans-serif'; ctx.textAlign = 'left';
         ctx.fillText('和你相配的小众美学', padX, y);
-        y += 110;
-        ctx.fillStyle = '#1e1e1e'; ctx.font = '700 72px Georgia, "宋体", serif';
-        y = wrapTextY(ctx, mainName, padX, y, W - padX * 2, 88);
-        y += 70;
-        ctx.fillStyle = '#bbbbbb'; ctx.font = '400 32px "Helvetica Neue", Arial, sans-serif';
-        ctx.fillText(STYLE_EN[mainName], padX, y);
-        y += 70;
-        ctx.fillStyle = '#888888'; ctx.font = 'italic 40px Georgia, "宋体", serif';
-        y = wrapTextY(ctx, detail.subtitle, padX, y, W - padX * 2, 56);
         y += 90;
-        ctx.font = '400 30px "Helvetica Neue", Arial, sans-serif';
+        ctx.fillStyle = '#1e1e1e'; ctx.font = '700 60px Georgia, "宋体", serif';
+        y = wrapTextY(ctx, mainName, padX, y, W - padX * 2, 76);
+        y += 56;
+        ctx.fillStyle = '#bbbbbb'; ctx.font = '400 28px "Helvetica Neue", Arial, sans-serif';
+        ctx.fillText(STYLE_EN[mainName], padX, y);
+        y += 56;
+        ctx.fillStyle = '#888888'; ctx.font = 'italic 34px Georgia, "宋体", serif';
+        y = wrapTextY(ctx, detail.subtitle, padX, y, W - padX * 2, 48);
+        y += 70;
+        ctx.font = '400 26px "Helvetica Neue", Arial, sans-serif';
         let tx = padX;
         detail.tags.forEach(t => {
-            const w = ctx.measureText(t).width + 56;
-            drawRoundRect(ctx, tx, y - 34, w, 56, 28, '#f0efec');
+            const w = ctx.measureText(t).width + 48;
+            drawRoundRect(ctx, tx, y - 30, w, 48, 24, '#f0efec');
             ctx.fillStyle = '#444444'; ctx.textAlign = 'center'; ctx.fillText(t, tx + w / 2, y + 2);
-            tx += w + 18; ctx.textAlign = 'left';
+            tx += w + 16; ctx.textAlign = 'left';
         });
-        y += 90;
-        ctx.strokeStyle = '#f0efec'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(padX, y); ctx.lineTo(W - padX, y); ctx.stroke();
         y += 60;
-        ctx.fillStyle = '#bbbbbb'; ctx.font = '300 28px "Helvetica Neue", Arial, sans-serif'; ctx.textAlign = 'left';
+        ctx.strokeStyle = '#f0efec'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(padX, y); ctx.lineTo(W - padX, y); ctx.stroke();
+        y += 50;
+        ctx.fillStyle = '#bbbbbb'; ctx.font = '300 26px "Helvetica Neue", Arial, sans-serif'; ctx.textAlign = 'left';
         ctx.fillText('你的美学光谱', padX, y);
-        y += 30;
+        y += 24;
         top3.forEach((x) => {
-            const pct = Math.round(x.score / totalTop3 * 100); y += 56;
-            ctx.fillStyle = '#555555'; ctx.font = '400 28px Georgia, "宋体", serif'; ctx.textAlign = 'left';
+            const pct = Math.round(x.score / totalTop3 * 100); y += 50;
+            ctx.fillStyle = '#555555'; ctx.font = '400 26px Georgia, "宋体", serif'; ctx.textAlign = 'left';
             ctx.fillText(x.name, padX, y);
-            ctx.fillStyle = '#999999'; ctx.font = '400 26px "Helvetica Neue", Arial, sans-serif'; ctx.textAlign = 'right';
+            ctx.fillStyle = '#999999'; ctx.font = '400 24px "Helvetica Neue", Arial, sans-serif'; ctx.textAlign = 'right';
             ctx.fillText(pct + '%', W - padX, y);
-            const barY = y + 18; const barW = W - padX * 2;
-            drawRoundRect(ctx, padX, barY, barW, 14, 7, '#ececec');
-            drawRoundRect(ctx, padX, barY, barW * pct / 100, 14, 7, STYLE_COLORS[x.name]);
+            const barY = y + 16; const barW = W - padX * 2;
+            drawRoundRect(ctx, padX, barY, barW, 12, 6, '#ececec');
+            drawRoundRect(ctx, padX, barY, barW * pct / 100, 12, 6, STYLE_COLORS[x.name]);
         });
-        ctx.fillStyle = '#e0e0e0'; ctx.font = '300 24px "Helvetica Neue", Arial, sans-serif'; ctx.textAlign = 'center';
-        ctx.fillText('16道题 · 10种风格', W / 2, H - 70);
+        ctx.fillStyle = '#e0e0e0'; ctx.font = '300 22px "Helvetica Neue", Arial, sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText('16道题 · 10种风格', W / 2, H - 50);
         const link = document.createElement('a');
         link.download = mainName + '-美学卡片.png';
         link.href = canvas.toDataURL('image/png');
